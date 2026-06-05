@@ -623,10 +623,63 @@ function buildGuestCard(n) {
   g3a.style.marginTop = '16px';
   var inpNat = inp('text', true);
   var inpPob = inp('text', true);
-  var inpDob = inp('date', true);
+  // Sostituisci l'input date con tre campi separati per giorno, mese e anno
+  var inpDobDay = document.createElement('select');
+  inpDobDay.required = true;
+  inpDobDay.style.width = '100%';
+  var defOptDay = document.createElement('option');
+  defOptDay.value = '';
+  defOptDay.textContent = 'Giorno';
+  inpDobDay.appendChild(defOptDay);
+  for (var d = 1; d <= 31; d++) {
+    var opt = document.createElement('option');
+    opt.value = d.toString().padStart(2, '0');
+    opt.textContent = d.toString().padStart(2, '0');
+    inpDobDay.appendChild(opt);
+  }
+
+  var inpDobMonth = document.createElement('select');
+  inpDobMonth.required = true;
+  inpDobMonth.style.width = '100%';
+  var defOptMonth = document.createElement('option');
+  defOptMonth.value = '';
+  defOptMonth.textContent = 'Mese';
+  inpDobMonth.appendChild(defOptMonth);
+  var months = ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'];
+  for (var m = 0; m < 12; m++) {
+    var opt = document.createElement('option');
+    opt.value = (m + 1).toString().padStart(2, '0');
+    opt.textContent = months[m];
+    inpDobMonth.appendChild(opt);
+  }
+
+  var inpDobYear = document.createElement('select');
+  inpDobYear.required = true;
+  inpDobYear.style.width = '100%';
+  var defOptYear = document.createElement('option');
+  defOptYear.value = '';
+  defOptYear.textContent = 'Anno';
+  inpDobYear.appendChild(defOptYear);
+  var currentYear = new Date().getFullYear();
+  for (var y = currentYear; y >= 1900; y--) {
+    var opt = document.createElement('option');
+    opt.value = y.toString();
+    opt.textContent = y.toString();
+    inpDobYear.appendChild(opt);
+  }
+  
   g3a.appendChild(field(t.f_nationality, inpNat));
   g3a.appendChild(field(t.f_pob, inpPob));
-  g3a.appendChild(field(t.f_dob, inpDob));
+  // Invece di un singolo campo data, aggiungiamo i tre campi in un contenitore
+  var dobContainer = document.createElement('div');
+  dobContainer.className = 'grid grid-3';
+  dobContainer.style.marginTop = '0px';
+  dobContainer.style.width = '100%';
+  dobContainer.appendChild(field('Giorno', inpDobDay));
+  dobContainer.appendChild(field('Mese', inpDobMonth));
+  dobContainer.appendChild(field('Anno', inpDobYear));
+  g3a.appendChild(dobContainer);
+  
   body.appendChild(g3a);
 
   // Sesso
@@ -801,17 +854,29 @@ function collectGuestData(n) {
   if (!card) return null;
   var inputs  = card.querySelectorAll('input');
   var selects = card.querySelectorAll('select');
+  // inputs: 0=surname, 1=firstName, 2=nationality, 3=pob, (4,5,6 sono i tre select per dob), 7=docNum, 8=docIssuer, 9=docExpiry
+  // selects: 0=gender, 1=docType
+  var daySelect = card.querySelectorAll('select')[2]; // Il terzo select è il giorno
+  var monthSelect = card.querySelectorAll('select')[3]; // Il quarto select è il mese
+  var yearSelect = card.querySelectorAll('select')[4]; // Il quinto select è l'anno
+  var day = daySelect ? daySelect.value : '';
+  var month = monthSelect ? monthSelect.value : '';
+  var year = yearSelect ? yearSelect.value : '';
+  var dob = '';
+  if (day && month && year) {
+    dob = year + '-' + month + '-' + day;
+  }
   var data = {
     surname:     inputs[0] ? inputs[0].value : '',
     firstName:   inputs[1] ? inputs[1].value : '',
     nationality: inputs[2] ? inputs[2].value : '',
     pob:         inputs[3] ? inputs[3].value : '',
-    dob:         inputs[4] ? inputs[4].value : '',
+    dob:         dob,
     gender:      selects[0] ? selects[0].value : '',
     docType:     selects[1] ? selects[1].value : '',
-    docNumber:   inputs[5] ? inputs[5].value : '',
-    docIssuer:   inputs[6] ? inputs[6].value : '',
-    docExpiry:   inputs[7] ? inputs[7].value : ''
+    docNumber:   inputs[4] ? inputs[4].value : '',
+    docIssuer:   inputs[5] ? inputs[5].value : '',
+    docExpiry:   inputs[6] ? inputs[6].value : ''
   };
   return data;
 }
@@ -1004,22 +1069,45 @@ async function submitForm() {
       var n = i + 1;
       var inp = card.querySelectorAll('input');
       var sel = card.querySelectorAll('select');
+      var daySelect = card.querySelectorAll('select')[2];
+      var monthSelect = card.querySelectorAll('select')[3];
+      var yearSelect = card.querySelectorAll('select')[4];
+      var day = daySelect ? daySelect.value : '';
+      var month = monthSelect ? monthSelect.value : '';
+      var year = yearSelect ? yearSelect.value : '';
+      var dob = '';
+      if (day && month && year) {
+        dob = year + '-' + month + '-' + day;
+      }
       params.append('G'+n+'_Surname',     inp[0] ? inp[0].value : '');
       params.append('G'+n+'_FirstName',   inp[1] ? inp[1].value : '');
       params.append('G'+n+'_Nationality', inp[2] ? inp[2].value : '');
       params.append('G'+n+'_POB',         inp[3] ? inp[3].value : '');
-      params.append('G'+n+'_DOB',         inp[4] ? inp[4].value : '');
+      params.append('G'+n+'_DOB',         dob);
       params.append('G'+n+'_Gender',      sel[0] ? sel[0].value : '');
       params.append('G'+n+'_DocType',     sel[1] ? sel[1].value : '');
-      params.append('G'+n+'_DocNumber',   inp[5] ? inp[5].value : '');
-      params.append('G'+n+'_DocIssuer',   inp[6] ? inp[6].value : '');
-      params.append('G'+n+'_DocExpiry',   inp[7] ? inp[7].value : '');
+      params.append('G'+n+'_DocNumber',   inp[4] ? inp[4].value : '');
+      params.append('G'+n+'_DocIssuer',   inp[5] ? inp[5].value : '');
+      params.append('G'+n+'_DocExpiry',   inp[6] ? inp[6].value : '');
     });
 
-    // Invia dati testuali (richiesta veloce)
-    await fetch(APPS_SCRIPT_URL + '?' + params.toString(), { method:'GET', mode:'no-cors' });
+    // ✅ 3. Invia dati e ricevi la risposta (con folderId)
+    var response = await fetch(APPS_SCRIPT_URL + '?' + params.toString(), {
+      method: 'GET'
+    });
+    
+    if (!response.ok) {
+      throw new Error('Errore nella richiesta: ' + response.status);
+    }
+    
+    var responseData = await response.json();
+    var folderId = responseData.folderId;
 
-    // ✅ 3. Prepara tutte le foto in parallelo
+    if (!folderId) {
+      throw new Error('ID cartella non ricevuto');
+    }
+
+    // ✅ 4. Prepara tutte le foto in parallelo usando folderId
     var photoPromises = [];
     for (var j = 0; j < cards.length; j++) {
       var n2 = j + 1;
@@ -1029,15 +1117,14 @@ async function submitForm() {
         var fn = inp2[0] ? inp2[0].value : 'Ospite' + n2;
         var ln = inp2[1] ? inp2[1].value : '';
         var promise = compressImage(fi2.files[0]).then(function(b64) {
-          // Invia foto con folderName (il nome della cartella)
           return fetch(APPS_SCRIPT_URL, {
-            method:'POST', mode:'no-cors',
-            headers:{'Content-Type':'text/plain'},
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              action:'savePhoto', 
-              folderKey: folderName,  // ← Usa il nome della cartella
-              photoName:'Doc_Ospite'+n2+'_'+fn+'_'+ln+'.jpg', 
-              photoData:b64
+              action: 'savePhoto',
+              folderId: folderId,  // ← Usa l'ID della cartella
+              photoName: 'Doc_Ospite' + n2 + '_' + fn + '_' + ln + '.jpg',
+              photoData: b64
             })
           });
         });
@@ -1045,11 +1132,10 @@ async function submitForm() {
       }
     }
 
-    // ✅ 4. Invia tutte le foto in parallelo (velocissimo!)
     await Promise.all(photoPromises);
 
     // ✅ 5. Elimina sessione Firebase
-    fetch(FIREBASE_URL + '/sessions/' + SESSION_ID + '.json', { method:'DELETE' }).catch(function(){});
+    fetch(FIREBASE_URL + '/sessions/' + SESSION_ID + '.json', { method: 'DELETE' }).catch(function(){});
 
     document.getElementById('success-overlay').classList.add('show');
     document.getElementById('success-overlay').addEventListener('click', function() {
@@ -1057,7 +1143,8 @@ async function submitForm() {
     });
 
   } catch(err) {
-    alert(t.alert_neterror);
+    console.error('Errore durante l\'invio:', err);
+    alert(t.alert_neterror + ' ' + err.message);
     btn.textContent = T[currentLang].btn_submit;
     btn.disabled = false;
   }
@@ -1099,16 +1186,29 @@ fetch(FIREBASE_URL + '/sessions/' + SESSION_ID + '.json')
           var card = document.getElementById('guest-' + (i+1));
           var inputs  = card.querySelectorAll('input');
           var selects = card.querySelectorAll('select');
+          // inputs: 0=surname, 1=firstName, 2=nationality, 3=pob, 4=docNum, 5=docIssuer, 6=docExpiry
+          // selects: 0=gender, 1=docType, 2=day, 3=month, 4=year
           if (inputs[0])  inputs[0].value  = g.surname     || '';
           if (inputs[1])  inputs[1].value  = g.firstName   || '';
           if (inputs[2])  inputs[2].value  = g.nationality || '';
           if (inputs[3])  inputs[3].value  = g.pob         || '';
-          if (inputs[4])  inputs[4].value  = g.dob         || '';
+          // Recupera i select per giorno, mese, anno
+          var daySelect = card.querySelectorAll('select')[2];
+          var monthSelect = card.querySelectorAll('select')[3];
+          var yearSelect = card.querySelectorAll('select')[4];
+          if (g.dob) {
+            var parts = g.dob.split('-');
+            if (parts.length === 3) {
+              if (daySelect) daySelect.value = parts[2];
+              if (monthSelect) monthSelect.value = parts[1];
+              if (yearSelect) yearSelect.value = parts[0];
+            }
+          }
           if (selects[0]) selects[0].value = g.gender      || '';
           if (selects[1]) selects[1].value = g.docType     || '';
-          if (inputs[5])  inputs[5].value  = g.docNumber   || '';
-          if (inputs[6])  inputs[6].value  = g.docIssuer   || '';
-          if (inputs[7])  inputs[7].value  = g.docExpiry   || '';
+          if (inputs[4])  inputs[4].value  = g.docNumber   || '';
+          if (inputs[5])  inputs[5].value  = g.docIssuer   || '';
+          if (inputs[6])  inputs[6].value  = g.docExpiry   || '';
           var photoData = data.photos && data.photos['photo_' + (i+1)];
           if (photoData) {
             var zone = document.getElementById('zone-' + (i+1));
