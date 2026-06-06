@@ -205,7 +205,7 @@
   <div class="success-box">
     <div class="success-icon"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M6 14.5l5.5 5.5L22 9" stroke="#c4714a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <h2 data-i18n="success_title">Registrazione completata</h2>
-    <p data-i18n="success_text">Grazie! I tuoi dati sono stati ricevuti correttamente. Il tuo host ti contatterà per le istruzioni sul check-in. Ti auguriamo un ottimo soggiorno 🏡</p>
+    <p data-i18n="success_text">Grazie! I tuoi dati sono stati ricevuti. Il tuo host ti contatterà per le istruzioni. Buon soggiorno 🏡</p>
   </div>
 </div>
 
@@ -268,7 +268,6 @@ function collectData() {
     arrival:   document.getElementById('arrival-time').value,
     totGuests: document.getElementById('total-guests').value,
     guests:    [],
-    // Aggiungiamo un campo per salvare le foto in bozza (base64)
     photos: {}
   };
   document.querySelectorAll('.guest-card').forEach(function(card, i) {
@@ -289,16 +288,6 @@ function collectData() {
       email:       n === 1 && inputs[9]  ? inputs[9].value  : '',
       phone:       n === 1 && inputs[10] ? inputs[10].value : ''
     });
-    // Foto: se c'è un file caricato, lo convertiamo in base64 per la bozza
-    var fi = document.getElementById('file-' + n);
-    if (fi && fi.files && fi.files.length > 0) {
-      // Nota: in collectData() non possiamo fare lettura asincrona,
-      // quindi per la bozza salviamo solo un flag e gestiamo la foto altrove.
-      // Per ora salviamo il flag; la foto vera verrà salvata in saveDraft() con una seconda chiamata.
-      data.photos['photo_' + n] = 'pending'; // verrà risolto in saveDraft()
-    } else {
-      data.photos['photo_' + n] = null;
-    }
   });
   return data;
 }
@@ -354,7 +343,6 @@ function restoreForm(data) {
           preview.src = photoData;
           zone.classList.add('has-file');
           btn.textContent = T[currentLang].f_doc_photo_change;
-          // Reimposta l'input file? Non necessario per la visualizzazione
         }
       }
     });
@@ -464,13 +452,6 @@ function setLang(lang) {
     var key = el.getAttribute('data-i18n');
     if (t[key] !== undefined) el.innerHTML = t[key];
   });
-  // Aggiorna i date picker per la lingua (ricostruisce)
-  // Nota: per i date picker interni alle card, dovremmo ricostruirli.
-  // Per semplicità, chiudiamo i picker aperti e li ricreiamo al prossimo click.
-  Object.keys(DatePicker._pickers).forEach(function(id) {
-    var p = DatePicker.get(id);
-    if (p) p.close();
-  });
   // Ricostruisce ospiti nella nuova lingua
   var container = document.getElementById('guests-container');
   var count = container.querySelectorAll('.guest-card').length;
@@ -535,6 +516,8 @@ function buildGuestCard(n) {
   g3.appendChild(field(t.f_surname + ' <span class="req">*</span>', inpSurname));
   g3.appendChild(field(t.f_dob + ' <span class="req">*</span>', inpDob));
   card.appendChild(g3);
+  // Inizializza date picker per DOB dopo l'append
+  makeDatePicker(inpDob, { defaultYear: 1985 });
 
   // Griglia 2: luogo nascita, nazionalità
   var g2a = document.createElement('div');
@@ -564,6 +547,8 @@ function buildGuestCard(n) {
   g3b.appendChild(field(t.f_docnum + ' <span class="req">*</span>', inpDocNum));
   g3b.appendChild(field(t.f_docexp, inpDocExp));
   card.appendChild(g3b);
+  // Inizializza date picker per scadenza
+  makeDatePicker(inpDocExp, { defaultYear: new Date().getFullYear() + 5 });
 
   // Griglia 2: residenza, codice fiscale
   var g2b = document.createElement('div');
@@ -639,10 +624,6 @@ function buildGuestCard(n) {
   photoField.appendChild(fileInput);
   card.appendChild(photoField);
 
-  // Inizializza date picker per DOB e DocExp
-  makeDatePicker(inpDob, { defaultYear: 1985 });
-  makeDatePicker(inpDocExp, { defaultYear: new Date().getFullYear() + 5 });
-
   return card;
 }
 
@@ -658,7 +639,7 @@ function removeGuest(n) {
     el.style.transition='opacity .2s';
     setTimeout(function() {
       el.remove();
-      guestCount--; // <-- CORREZIONE: decremento guestCount
+      guestCount--;
       scheduleSave();
     }, 200);
   }
@@ -693,13 +674,12 @@ async function submitForm() {
   if (!privacyOk || !rulesOk) { alert(t.alert_privacy); return; }
   if (guestCount === 0) { alert(t.alert_guest_min); return; }
 
-  // Controlla foto solo per gli ospiti effettivamente presenti (non per quelli rimossi)
+  // Controlla foto solo per gli ospiti effettivamente presenti
   var cards = document.querySelectorAll('.guest-card');
   for (var i = 1; i <= cards.length; i++) {
     var fi = document.getElementById('file-' + i);
     if (!fi || !fi.files || fi.files.length === 0) {
-      // Ma se l'ospite non ha dati (nome e cognome vuoti), non chiedere foto?
-      // Per sicurezza controlliamo se l'ospite ha almeno nome o cognome
+      // Se l'ospite non ha nome e cognome, non richiedere foto
       var card = document.getElementById('guest-' + i);
       if (!card) continue;
       var inputs = card.querySelectorAll('input');
@@ -817,7 +797,7 @@ async function submitForm() {
 //  DATE PICKER
 // ─────────────────────────────────────────────
 var DatePicker = (function() {
-  var _pickers = {};
+  var pickers = {};
 
   function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
@@ -857,8 +837,6 @@ var DatePicker = (function() {
     var curM = now.getMonth() + 1;
     var curY = now.getFullYear();
     if (options.defaultYear) curY = options.defaultYear;
-    // minDate per check-in e check-out
-    var minDate = options.minDate || null;
 
     // Close on outside click
     document.addEventListener('click', function(e) {
@@ -869,7 +847,7 @@ var DatePicker = (function() {
     input.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
 
     function toggle() { popup.classList.contains('open') ? close() : open(); }
-    function open()  { Object.keys(_pickers).forEach(function(id){ if (id !== inputId) _pickers[id].close(); }); render(); popup.classList.add('open'); }
+    function open()  { Object.keys(pickers).forEach(function(id){ if (id !== inputId) pickers[id].close(); }); render(); popup.classList.add('open'); }
     function close() { popup.classList.remove('open'); }
 
     function setValue(d, m, y) {
@@ -922,11 +900,6 @@ var DatePicker = (function() {
         var c = el('button','dp-cell'); c.type='button'; c.textContent = d;
         if (sel && sel.d===d && sel.m===curM && sel.y===curY) c.classList.add('dp-sel');
         if (d===today.getDate() && curM===today.getMonth()+1 && curY===today.getFullYear()) c.classList.add('dp-today');
-        // Controllo minDate (se presente)
-        if (minDate) {
-          var iso = toISO(d,curM,curY);
-          if (iso < minDate) c.classList.add('dp-dim');
-        }
         (function(day){ c.onclick = function(e){ e.stopPropagation(); setValue(day,curM,curY); }; }(d));
         grid.appendChild(c);
       }
@@ -993,23 +966,11 @@ var DatePicker = (function() {
     }
 
     var api = { open:open, close:close, getISO:getISO, setISO:setISO };
-    _pickers[inputId] = api;
+    pickers[inputId] = api;
     return api;
   }
 
-  return {
-    init: init,
-    get: function(id) { return _pickers[id]; },
-    _pickers: _pickers,
-    // Metodo per aggiornare la lingua (ricostruisce i picker esistenti)
-    updateLanguage: function() {
-      Object.keys(_pickers).forEach(function(id) {
-        var p = _pickers[id];
-        if (p) p.close();
-        // Per ricostruire, basta che l'utente clicchi sul campo
-      });
-    }
-  };
+  return { init:init, get:function(id){ return pickers[id]; } };
 }());
 
 // Date picker per guest card (dob, docExp)
@@ -1040,7 +1001,7 @@ function makeDatePicker(inputEl, options) {
 // ─────────────────────────────────────────────
 function saveDraft() {
   var data = collectData();
-  // Ora raccogliamo le foto in base64 (asincrono)
+  // Raccogliamo le foto in base64
   var cards = document.querySelectorAll('.guest-card');
   var photoPromises = [];
   cards.forEach(function(card, i) {
@@ -1075,16 +1036,11 @@ function saveDraft() {
 //  VALIDAZIONE DATE (check-in e check-out)
 // ─────────────────────────────────────────────
 function validateDates() {
-  var today = new Date().toISOString().split('T')[0];
   var ciPicker = DatePicker.get('checkin-date');
   var coPicker = DatePicker.get('checkout-date');
   var checkin = ciPicker ? ciPicker.getISO() : '';
   var checkout = coPicker ? coPicker.getISO() : '';
 
-  // Imposta minDate per i picker (oggi)
-  // Nota: il DatePicker non supporta minDate nativamente, dobbiamo passare l'opzione.
-  // Ricreiamo i picker con minDate se necessario.
-  // Per semplicità, usiamo la proprietà data-iso per confronti.
   if (checkin && checkout && checkin > checkout) {
     showToast('⚠️ La data di check-in non può essere dopo il check-out');
     // Reimposta checkout uguale a checkin
@@ -1094,12 +1050,6 @@ function validateDates() {
 
 // Aggiungi validazione ai campi date quando cambiano
 document.addEventListener('DOMContentLoaded', function() {
-  // Imposta minDate per check-in (oggi)
-  var today = new Date().toISOString().split('T')[0];
-  // Non possiamo passare minDate direttamente perché il picker non lo supporta.
-  // Ma possiamo aggiungere un controllo al click.
-  // Per ora, la funzione validateDates() farà il controllo.
-  // Aggiungiamo listener per i campi date
   var ciInput = document.getElementById('checkin-date');
   var coInput = document.getElementById('checkout-date');
   if (ciInput) {
