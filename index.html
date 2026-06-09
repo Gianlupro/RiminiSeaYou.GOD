@@ -652,7 +652,7 @@ function buildGuestCard(n) {
   g3a.appendChild(field(t.f_nationality, inpNat));
   g3a.appendChild(field(t.f_pob, inpPob));
   g3a.appendChild(field(t.f_dob, inpDob));
-  inpDob.dataset.dpYear = '1985';
+  inpDob.dataset.dpYear = String(new Date().getFullYear());
   body.appendChild(g3a);
 
   // Sesso
@@ -701,7 +701,7 @@ function buildGuestCard(n) {
   gDocExp.style.marginTop = '16px';
   var inpDocExp = inp('text', true);
   gDocExp.appendChild(field(t.f_docexp, inpDocExp));
-  inpDocExp.dataset.dpYear = String(new Date().getFullYear() + 3);
+  inpDocExp.dataset.dpYear = String(new Date().getFullYear());
   body.appendChild(gDocExp);
 
   // Foto documento
@@ -1052,33 +1052,36 @@ async function submitForm() {
     if (saveJson.result !== 'ok') throw new Error('saveData failed: ' + (saveJson.message||''));
     var folderId = saveJson.folderId;
 
-    // STEP 2: comprimi e invia tutte le foto in parallelo con folderId
-    var photoPromises = [];
+    // STEP 2: comprimi e invia le foto in sequenza (una alla volta, affidabile)
     for (var j = 0; j < cards.length; j++) {
       var n2 = j + 1;
       var fi2 = document.getElementById('file-' + n2);
-      if (fi2 && fi2.files[0]) {
+      if (fi2 && fi2.files && fi2.files[0]) {
         var inp2 = cards[j].querySelectorAll('input');
-        var fn = inp2[1] ? inp2[1].value : 'Ospite' + n2;
-        var ln = inp2[0] ? inp2[0].value : '';
-        (function(gn, firstname, lastname, file) {
-          var promise = compressImage(file).then(function(b64) {
-            return fetch(APPS_SCRIPT_URL, {
-              method:'POST', redirect:'follow',
-              headers:{'Content-Type':'text/plain'},
-              body: JSON.stringify({
-                action:'savePhoto',
-                folderId: folderId,
-                photoName:'Doc_Ospite'+gn+'_'+firstname+'_'+lastname+'.jpg',
-                photoData:b64
-              })
-            });
+        var fn2 = inp2[1] ? inp2[1].value : 'Ospite' + n2;
+        var ln2 = inp2[0] ? inp2[0].value : '';
+        try {
+          var b64 = await compressImage(fi2.files[0]);
+          var photoResp = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            redirect: 'follow',
+            headers: {'Content-Type': 'text/plain'},
+            body: JSON.stringify({
+              action: 'savePhoto',
+              folderId: folderId,
+              photoName: 'Doc_Ospite' + n2 + '_' + fn2 + '_' + ln2 + '.jpg',
+              photoData: b64
+            })
           });
-          photoPromises.push(promise);
-        }(n2, fn, ln, fi2.files[0]));
+          var photoJson = await photoResp.json().catch(function(){ return {}; });
+          if (photoJson.result !== 'ok') {
+            console.warn('Foto ospite ' + n2 + ' non salvata:', photoJson.message || 'errore sconosciuto');
+          }
+        } catch(photoErr) {
+          console.warn('Errore invio foto ospite ' + n2 + ':', photoErr);
+        }
       }
     }
-    await Promise.all(photoPromises);
 
     // ✅ 5. Elimina sessione Firebase
     fetch(FIREBASE_URL + '/sessions/' + SESSION_ID + '.json', { method:'DELETE' }).catch(function(){});
