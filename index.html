@@ -970,13 +970,12 @@ async function submitForm() {
     
     // Se l'ospite ha dati, verifica se ha una foto
     if (hasData) {
-      var fi = document.getElementById('file-' + (i+1));
-      var zone = document.getElementById('zone-' + (i+1));
-      
-      // Controlla se c'è una foto già caricata (input file OPPURE anteprima visibile)
-      var hasNewFile = fi && fi.files && fi.files.length > 0;
+      var fi   = card.querySelector('input[type="file"]');
+      var zone = card.querySelector('.doc-upload-zone');
+
+      var hasNewFile      = fi && fi.files && fi.files.length > 0;
       var hasExistingPhoto = zone && zone.classList.contains('has-file');
-      
+
       if (!hasNewFile && !hasExistingPhoto) {
         hasMissingPhoto = true;
         missingGuestIndex = i + 1;
@@ -1052,13 +1051,15 @@ async function submitForm() {
     if (saveJson.result !== 'ok') throw new Error('saveData failed: ' + (saveJson.message||''));
     var folderId = saveJson.folderId;
 
-    // STEP 2: comprimi e invia le foto in sequenza (una alla volta, affidabile)
+    // STEP 2: comprimi e invia le foto in sequenza cercando l'input dentro ogni card
     for (var j = 0; j < cards.length; j++) {
-      var n2 = j + 1;
-      var fi2 = document.getElementById('file-' + n2);
+      var card = cards[j];
+      var cardNum = j + 1;
+      // Cerca il file input DENTRO la card — non per ID globale
+      var fi2 = card.querySelector('input[type="file"]');
       if (fi2 && fi2.files && fi2.files[0]) {
-        var inp2 = cards[j].querySelectorAll('input');
-        var fn2 = inp2[1] ? inp2[1].value : 'Ospite' + n2;
+        var inp2 = card.querySelectorAll('input');
+        var fn2 = inp2[1] ? inp2[1].value : 'Ospite' + cardNum;
         var ln2 = inp2[0] ? inp2[0].value : '';
         try {
           var b64 = await compressImage(fi2.files[0]);
@@ -1069,16 +1070,16 @@ async function submitForm() {
             body: JSON.stringify({
               action: 'savePhoto',
               folderId: folderId,
-              photoName: 'Doc_Ospite' + n2 + '_' + fn2 + '_' + ln2 + '.jpg',
+              photoName: 'Doc_Ospite' + cardNum + '_' + fn2 + '_' + ln2 + '.jpg',
               photoData: b64
             })
           });
           var photoJson = await photoResp.json().catch(function(){ return {}; });
           if (photoJson.result !== 'ok') {
-            console.warn('Foto ospite ' + n2 + ' non salvata:', photoJson.message || 'errore sconosciuto');
+            console.warn('Foto ospite ' + cardNum + ' non salvata:', photoJson.message || 'errore sconosciuto');
           }
         } catch(photoErr) {
-          console.warn('Errore invio foto ospite ' + n2 + ':', photoErr);
+          console.warn('Errore invio foto ospite ' + cardNum + ':', photoErr);
         }
       }
     }
