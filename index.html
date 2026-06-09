@@ -53,14 +53,10 @@
   .guest-body { padding: 0 28px 28px; }
   .guest-card.collapsed .guest-body { display: none; }
   
+  /* Grid migliorata per mobile */
   .grid { display: grid; gap: 16px; }
   .grid-2 { grid-template-columns: 1fr 1fr; }
   .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
-  
-  /* stili per i select data */
-  .date-selects { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .date-selects select { width: auto; flex: 1; min-width: 70px; background-color: var(--cream); }
-  .date-selects .date-sep { color: var(--mid); font-weight: 500; padding: 0 2px; }
   
   @media(max-width:600px) { 
     .grid-2, .grid-3 { grid-template-columns: 1fr; } 
@@ -72,7 +68,6 @@
     .btn-save-guest, .btn-edit, .btn-remove { font-size: 11px; padding: 4px 10px; }
     .container { padding: 20px 12px 60px; }
     .header { padding: 32px 16px 28px; }
-    .date-selects select { min-width: 60px; padding: 8px 4px; }
   }
   @media(min-width:601px) and (max-width:900px) {
     .grid-3 { grid-template-columns: 1fr 1fr; }
@@ -102,6 +97,7 @@
   .success-box p { font-size: 14px; color: var(--mid); line-height: 1.6; }
   .divider { border: none; border-top: 1px solid var(--border); margin: 4px 0 20px; }
   .section-intro { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-style: italic; color: var(--mid); margin-bottom: 22px; }
+  /* DOC UPLOAD */
   .doc-upload-zone { border: 1.5px dashed var(--border); border-radius: 4px; background: var(--cream); cursor: pointer; transition: border-color .2s; overflow: hidden; }
   .doc-upload-zone:hover { border-color: var(--terracotta); }
   .doc-upload-zone.has-file { border-color: var(--terracotta); border-style: solid; }
@@ -112,14 +108,48 @@
   .doc-upload-zone.has-file .doc-upload-preview { display: block; }
   .doc-upload-zone.has-file .doc-upload-hint { display: none; }
   .doc-upload-input { display: none; }
+  /* SESSION BOX */
   .session-box { background: rgba(196,113,74,.06); border: 1px solid rgba(196,113,74,.2); border-radius: 4px; padding: 14px 16px; margin-top: 20px; }
   .session-box-label { font-size: 10px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
   .session-box-hint { font-size: 12px; color: var(--mid); margin-bottom: 10px; line-height: 1.5; }
   .session-link-row { display: flex; gap: 8px; align-items: center; }
   .session-link-text { font-size: 11px; color: var(--terracotta); word-break: break-all; flex: 1; }
   .session-copy-btn { flex-shrink: 0; background: var(--terracotta); color: #fff; border: none; border-radius: 3px; padding: 7px 14px; font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; white-space: nowrap; }
+
+  /* DATE PICKER */
+  .dp-wrap { position: relative; }
+  .dp-input { cursor: pointer; caret-color: transparent; user-select: none; }
+  .dp-popup { display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 300;
+    background: var(--warm-white); border: 1px solid var(--border); border-radius: 4px;
+    box-shadow: 0 8px 32px rgba(44,40,37,.18); width: 270px; overflow: hidden; }
+  .dp-popup.open { display: block; }
+  .dp-header { display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px; background: var(--charcoal); color: var(--cream); }
+  .dp-nav { background: none; border: none; color: var(--cream); font-size: 20px;
+    cursor: pointer; padding: 0 8px; line-height: 1; border-radius: 3px; }
+  .dp-nav:hover { background: rgba(255,255,255,.15); }
+  .dp-lbl { font-size: 13px; font-weight: 500; cursor: pointer; padding: 4px 10px;
+    border-radius: 3px; font-family: 'DM Sans', sans-serif; }
+  .dp-lbl:hover { background: rgba(255,255,255,.15); }
+  .dp-grid { display: grid; padding: 8px; gap: 2px; }
+  .dp-7 { grid-template-columns: repeat(7,1fr); }
+  .dp-4 { grid-template-columns: repeat(4,1fr); }
+  .dp-5 { grid-template-columns: repeat(5,1fr); }
+  .dp-cell { text-align: center; padding: 6px 2px; font-size: 12px; border-radius: 3px;
+    cursor: pointer; border: none; background: none; width: 100%;
+    color: var(--charcoal); transition: background .1s; font-family: 'DM Sans', sans-serif; }
+  .dp-cell:hover { background: rgba(196,113,74,.15); }
+  .dp-cell.sel { background: var(--terracotta); color: #fff; font-weight: 600; }
+  .dp-cell.today { outline: 1.5px solid var(--terracotta); }
+  .dp-cell.dim { color: #ccc; }
+  .dp-dow { text-align: center; font-size: 10px; color: var(--mid);
+    padding: 4px 2px; text-transform: uppercase; letter-spacing: 1px;
+    font-family: 'DM Sans', sans-serif; }
+
+  /* TOAST */
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--charcoal); color: var(--cream); padding: 12px 20px; border-radius: 4px; font-size: 13px; z-index: 200; box-shadow: 0 4px 20px rgba(0,0,0,.3); opacity: 0; transition: opacity .3s; pointer-events: none; }
   .toast.show { opacity: 1; }
+  /* CONFIRM MODAL */
   .confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(44,40,37,.5); z-index: 90; align-items: center; justify-content: center; }
   .confirm-overlay.show { display: flex; }
   .confirm-box { background: var(--warm-white); border-radius: 6px; padding: 40px 36px; max-width: 440px; width: 90%; text-align: center; border-top: 4px solid var(--terracotta); }
@@ -148,8 +178,10 @@
 
 <div class="container">
 
+  <!-- TOAST -->
   <div class="toast" id="toast"></div>
 
+  <!-- BENVENUTO -->
   <div class="card" style="border-left:4px solid var(--terracotta);background:linear-gradient(135deg,#fff8f4 0%,var(--warm-white) 100%);">
     <p style="font-size:14px;line-height:1.75;color:var(--charcoal);">
       <span data-i18n="welcome_text">Per completare il check-in è <strong>obbligatorio compilare questo modulo</strong> con i dati di <strong>TUTTI gli ospiti</strong>.<br>I dati sono richiesti dalla normativa italiana e verranno comunicati alle autorità competenti.</span><br>
@@ -158,23 +190,14 @@
     </p>
   </div>
 
-  <!-- SOGGIORNO con select data -->
+  <!-- SOGGIORNO -->
   <div class="card">
     <div class="card-label" data-i18n="booking_label">Dettagli soggiorno</div>
     <div class="card-title" data-i18n="booking_title">Informazioni sulla prenotazione</div>
     <div class="grid grid-3">
-      <div class="field">
-        <label data-i18n="label_checkin">Data check-in <span class="req">*</span></label>
-        <div id="checkin-selects" class="date-selects"></div>
-      </div>
-      <div class="field">
-        <label data-i18n="label_checkout">Data check-out <span class="req">*</span></label>
-        <div id="checkout-selects" class="date-selects"></div>
-      </div>
-      <div class="field">
-        <label data-i18n="label_arrival">Orario arrivo <span class="req">*</span></label>
-        <input type="time" id="arrival-time" required onchange="saveAllToFirebase()">
-      </div>
+      <div class="field"><label data-i18n="label_checkin">Data check-in <span class="req">*</span></label><input type="date" id="checkin-date" required min="" onchange="saveAllToFirebase()"></div>
+      <div class="field"><label data-i18n="label_checkout">Data check-out <span class="req">*</span></label><input type="date" id="checkout-date" required min="" onchange="saveAllToFirebase()"></div>
+      <div class="field"><label data-i18n="label_arrival">Orario arrivo <span class="req">*</span></label><input type="time" id="arrival-time" required onchange="saveAllToFirebase()"></div>
     </div>
     <div class="grid grid-2" style="margin-top:16px">
       <div class="field">
@@ -185,6 +208,7 @@
         </select>
       </div>
     </div>
+    <!-- SESSION BOX -->
     <div class="session-box">
       <div class="session-box-label" data-i18n="session_label">Link sessione condivisa</div>
       <div class="session-box-hint" data-i18n="session_hint">Condividi questo link nel gruppo — tutti possono aprirlo e aggiungere i propri dati. L'invio finale va fatto da un solo dispositivo.</div>
@@ -195,6 +219,7 @@
     </div>
   </div>
 
+  <!-- OSPITI -->
   <div class="card">
     <div class="card-label" data-i18n="guests_label">Registrazione ospiti</div>
     <div class="card-title" data-i18n="guests_title">Dati anagrafici</div>
@@ -206,6 +231,7 @@
     </button>
   </div>
 
+  <!-- PRIVACY -->
   <div class="card">
     <div class="card-label" data-i18n="privacy_label">Privacy & Consenso</div>
     <div class="card-title" data-i18n="privacy_title">Informativa sul trattamento dei dati</div>
@@ -231,6 +257,7 @@
 
 </div>
 
+<!-- SUCCESS -->
 <div class="success-overlay" id="success-overlay">
   <div class="success-box">
     <div class="success-icon"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M6 14.5l5.5 5.5L22 9" stroke="#c4714a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -239,6 +266,7 @@
   </div>
 </div>
 
+<!-- CONFIRM MODAL -->
 <div class="confirm-overlay" id="confirm-overlay">
   <div class="confirm-box">
     <h3 data-i18n="confirm_title">Conferma invio</h3>
@@ -251,10 +279,11 @@
 </div>
 
 <script>
-// ==================== UTILITIES ====================
+// ── COSTANTI ──────────────────────────────────────────────────
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz0I2X0hXJQL-WqkAkUsdE1pE21Zl0X93-AQg0Zapj4eOBB-1r-TerlgcfqUskYhG4jGA/exec';
 const FIREBASE_URL    = 'https://riminiseayoucheckin-default-rtdb.europe-west1.firebasedatabase.app';
 
+// ── SESSION ID dall'URL ───────────────────────────────────────
 const SESSION_ID = (function() {
   var p = new URLSearchParams(window.location.search);
   var s = p.get('s');
@@ -265,6 +294,7 @@ const SESSION_ID = (function() {
   return s;
 })();
 
+// ── TOAST ─────────────────────────────────────────────────────
 function showToast(msg) {
   var t = document.getElementById('toast');
   t.textContent = msg;
@@ -272,17 +302,24 @@ function showToast(msg) {
   setTimeout(function() { t.classList.remove('show'); }, 3000);
 }
 
+// ── COPIA LINK ────────────────────────────────────────────────
 function copyLink() {
   var url = window.location.href;
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(url).then(function() { showToast('✓ Link copiato!'); })
-      .catch(function() { fallbackCopy(url); });
-  } else { fallbackCopy(url); }
+    navigator.clipboard.writeText(url).then(function() {
+      showToast('✓ Link copiato!');
+    }).catch(function() {
+      fallbackCopy(url);
+    });
+  } else {
+    fallbackCopy(url);
+  }
 }
 function fallbackCopy(url) {
   var ta = document.createElement('textarea');
   ta.value = url;
-  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
   document.body.appendChild(ta);
   ta.select();
   try { document.execCommand('copy'); showToast('✓ Link copiato!'); }
@@ -290,125 +327,20 @@ function fallbackCopy(url) {
   document.body.removeChild(ta);
 }
 
-// ==================== DATA SELECTS GENERATORS ====================
-function buildDateSelects(containerId, onchangeCallback) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth();
-  const currentDay = now.getDate();
-  
-  // giorno
-  const daySelect = document.createElement('select');
-  daySelect.className = 'date-day';
-  for (let i=1; i<=31; i++) {
-    let opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = i;
-    daySelect.appendChild(opt);
-  }
-  // mese
-  const monthSelect = document.createElement('select');
-  monthSelect.className = 'date-month';
-  const months = ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'];
-  months.forEach((m, idx) => {
-    let opt = document.createElement('option');
-    opt.value = idx+1;
-    opt.textContent = m;
-    monthSelect.appendChild(opt);
-  });
-  // anno
-  const yearSelect = document.createElement('select');
-  yearSelect.className = 'date-year';
-  for (let y = currentYear; y <= currentYear+5; y++) {
-    let opt = document.createElement('option');
-    opt.value = y;
-    opt.textContent = y;
-    yearSelect.appendChild(opt);
-  }
-  // imposta default oggi per checkin
-  if (containerId === 'checkin-selects') {
-    daySelect.value = currentDay;
-    monthSelect.value = currentMonth+1;
-    yearSelect.value = currentYear;
-  } else {
-    // per checkout imposta domani
-    let tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate()+1);
-    daySelect.value = tomorrow.getDate();
-    monthSelect.value = tomorrow.getMonth()+1;
-    yearSelect.value = tomorrow.getFullYear();
-  }
-  
-  function getDateString() {
-    let d = parseInt(daySelect.value);
-    let m = parseInt(monthSelect.value);
-    let y = parseInt(yearSelect.value);
-    if (isNaN(d)||isNaN(m)||isNaN(y)) return '';
-    return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-  }
-  
-  function updateMinMax() {
-    if (containerId === 'checkin-selects') {
-      // limiti per checkin: non prima di oggi
-      let todayStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(currentDay).padStart(2,'0')}`;
-      let selected = getDateString();
-      if (selected && selected < todayStr) {
-        daySelect.value = currentDay;
-        monthSelect.value = currentMonth+1;
-        yearSelect.value = currentYear;
-      }
-    } else if (containerId === 'checkout-selects') {
-      // checkout deve essere >= checkin
-      let checkinSel = document.getElementById('checkin-selects');
-      if (checkinSel) {
-        let checkinDay = checkinSel.querySelector('.date-day').value;
-        let checkinMonth = checkinSel.querySelector('.date-month').value;
-        let checkinYear = checkinSel.querySelector('.date-year').value;
-        if (checkinDay && checkinMonth && checkinYear) {
-          let checkinDate = new Date(parseInt(checkinYear), parseInt(checkinMonth)-1, parseInt(checkinDay));
-          let selectedDate = new Date(parseInt(yearSelect.value), parseInt(monthSelect.value)-1, parseInt(daySelect.value));
-          if (selectedDate < checkinDate) {
-            daySelect.value = checkinDay;
-            monthSelect.value = checkinMonth;
-            yearSelect.value = checkinYear;
-          }
-        }
-      }
-    }
-  }
-  
-  const changeHandler = function() {
-    updateMinMax();
-    if (onchangeCallback) onchangeCallback(getDateString());
+// ── VALIDAZIONE DATE ──────────────────────────────────────────
+function validateDates() {
+  var ciP = DP.get('checkin-date');
+  var coP = DP.get('checkout-date');
+  var checkin  = ciP ? ciP.getISO() : '';
+  var checkout = coP ? coP.getISO() : '';
+  if (checkin && checkout && checkin > checkout) {
+    showToast('⚠️ La data di check-in non può essere dopo il check-out');
+    if (coP) coP.setISO(checkin);
     saveAllToFirebase();
-  };
-  daySelect.onchange = changeHandler;
-  monthSelect.onchange = changeHandler;
-  yearSelect.onchange = changeHandler;
-  
-  container.innerHTML = '';
-  container.appendChild(daySelect);
-  container.appendChild(monthSelect);
-  container.appendChild(yearSelect);
-  
-  return { getValue: getDateString, setValue: function(dateStr) {
-    if (!dateStr) return;
-    let parts = dateStr.split('-');
-    if (parts.length===3) {
-      let y = parseInt(parts[0]), m = parseInt(parts[1]), d = parseInt(parts[2]);
-      if (!isNaN(d) && !isNaN(m) && !isNaN(y)) {
-        daySelect.value = d;
-        monthSelect.value = m;
-        yearSelect.value = y;
-        updateMinMax();
-      }
-    }
-  }};
+  }
 }
 
-// ==================== SALVATAGGIO GENERALE ====================
+// ── SALVATAGGIO COMPLETO SU FIREBASE ──────────────────────────
 function saveAllToFirebase() {
   var data = collectAllData();
   fetch(FIREBASE_URL + '/sessions/' + SESSION_ID + '.json', {
@@ -421,8 +353,8 @@ function saveAllToFirebase() {
 function collectAllData() {
   var data = {
     booking: {
-      checkin:   getCheckinDate(),
-      checkout:  getCheckoutDate(),
+      checkin:   (DP.get('checkin-date') ? DP.get('checkin-date').getISO() : '') || document.getElementById('checkin-date').dataset.iso || '',
+      checkout:  (DP.get('checkout-date') ? DP.get('checkout-date').getISO() : '') || document.getElementById('checkout-date').dataset.iso || '',
       arrival:   document.getElementById('arrival-time').value,
       totGuests: document.getElementById('total-guests').value
     },
@@ -431,42 +363,38 @@ function collectAllData() {
   };
   
   document.querySelectorAll('.guest-card').forEach(function(card, i) {
-    var n = i+1;
-    var guest = collectGuestDataFromCard(card);
+    var n = i + 1;
+    var inputs  = card.querySelectorAll('input');
+    var selects = card.querySelectorAll('select');
+    var guest = {
+      surname:     inputs[0] ? inputs[0].value : '',
+      firstName:   inputs[1] ? inputs[1].value : '',
+      nationality: inputs[2] ? inputs[2].value : '',
+      pob:         inputs[3] ? inputs[3].value : '',
+      dob:         inputs[4] ? (inputs[4].dataset.iso || inputs[4].value) : '',
+      gender:      selects[0] ? selects[0].value : '',
+      docType:     selects[1] ? selects[1].value : '',
+      docNumber:   inputs[5] ? inputs[5].value : '',
+      docIssuer:   inputs[6] ? inputs[6].value : '',
+      docExpiry:   inputs[7] ? (inputs[7].dataset.iso || inputs[7].value) : ''
+    };
     data.guests.push(guest);
     
+    // Foto
     var fi = document.getElementById('file-' + n);
     if (fi && fi.files && fi.files.length > 0) {
       var reader = new FileReader();
       reader.readAsDataURL(fi.files[0]);
-      data.photos['photo_' + n] = reader.result; // async handled later
+      data.photos['photo_' + n] = reader.result; // Verrà popolato asincrono
     } else {
       data.photos['photo_' + n] = null;
     }
   });
+  
   return data;
 }
 
-function getCheckinDate() {
-  let container = document.getElementById('checkin-selects');
-  if (!container) return '';
-  let day = container.querySelector('.date-day').value;
-  let month = container.querySelector('.date-month').value;
-  let year = container.querySelector('.date-year').value;
-  if (day && month && year) return `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-  return '';
-}
-function getCheckoutDate() {
-  let container = document.getElementById('checkout-selects');
-  if (!container) return '';
-  let day = container.querySelector('.date-day').value;
-  let month = container.querySelector('.date-month').value;
-  let year = container.querySelector('.date-year').value;
-  if (day && month && year) return `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-  return '';
-}
-
-// ==================== LINGUA ====================
+// ── LINGUA ────────────────────────────────────────────────────
 var currentLang = 'it';
 var T = {
   it: {
@@ -587,23 +515,25 @@ var T = {
 
 function setLang(lang) {
   currentLang = lang;
-  document.querySelectorAll('.lang-flag').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.lang-flag').forEach(b => {
+  document.querySelectorAll('.lang-flag').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.lang-flag').forEach(function(b) {
     if (b.getAttribute('onclick') === "setLang('" + lang + "')") b.classList.add('active');
   });
   var t = T[lang];
-  document.querySelectorAll('[data-i18n]').forEach(el => {
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
     var key = el.getAttribute('data-i18n');
     if (t[key] !== undefined) el.innerHTML = t[key];
   });
-  document.querySelectorAll('.guest-card').forEach((card, i) => {
+  // Aggiorna testi nei pulsanti salvati e nelle etichette dei campi
+  document.querySelectorAll('.guest-card').forEach(function(card, i) {
     var saveBtn = card.querySelector('.btn-save-guest');
     var editBtn = card.querySelector('.btn-edit');
     var badge = card.querySelector('.badge-saved');
     if (saveBtn) saveBtn.textContent = t.btn_save;
     if (editBtn) editBtn.textContent = t.btn_edit;
-    if (badge) badge.innerHTML = '✅ ' + t.badge_saved;
+    if (badge) badge.textContent = '✅ ' + t.badge_saved;
     
+    // Aggiorna etichette dei campi
     var labels = card.querySelectorAll('.field label');
     var fields = card.querySelectorAll('.field');
     if (labels.length > 0 && fields.length > 0) {
@@ -615,7 +545,7 @@ function setLang(lang) {
         t.f_docexp
       ];
       var labelIndex = 0;
-      fields.forEach(field => {
+      fields.forEach(function(field, idx) {
         var label = field.querySelector('label');
         if (label && labelIndex < fieldLabels.length) {
           label.innerHTML = fieldLabels[labelIndex];
@@ -626,147 +556,244 @@ function setLang(lang) {
   });
 }
 
-// ==================== OSPITE CARD ====================
+// ── OSPITE CARD ───────────────────────────────────────────────
 var guestCount = 0;
-
-function buildDateSelectorForGuest(initialValue, onUpdate) {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'date-selects';
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const daySel = document.createElement('select');
-  for (let i=1;i<=31;i++) { let o=document.createElement('option'); o.value=i; o.textContent=i; daySel.appendChild(o); }
-  const monthSel = document.createElement('select');
-  const months = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
-  months.forEach((m,idx)=>{ let o=document.createElement('option'); o.value=idx+1; o.textContent=m; monthSel.appendChild(o); });
-  const yearSel = document.createElement('select');
-  for (let y=1900; y<=currentYear+10; y++) { let o=document.createElement('option'); o.value=y; o.textContent=y; yearSel.appendChild(o); }
-  if (initialValue) {
-    let parts = initialValue.split('-');
-    if(parts.length===3){
-      daySel.value=parseInt(parts[2]);
-      monthSel.value=parseInt(parts[1]);
-      yearSel.value=parseInt(parts[0]);
-    }
-  } else {
-    daySel.value=1; monthSel.value=1; yearSel.value=currentYear-20;
-  }
-  function getDate() { return `${yearSel.value}-${String(monthSel.value).padStart(2,'0')}-${String(daySel.value).padStart(2,'0')}`; }
-  const handler = () => { if(onUpdate) onUpdate(getDate()); };
-  daySel.onchange=handler; monthSel.onchange=handler; yearSel.onchange=handler;
-  wrapper.appendChild(daySel); wrapper.appendChild(monthSel); wrapper.appendChild(yearSel);
-  return { element: wrapper, getValue: getDate, setValue: function(ds) {
-    let p = ds.split('-'); if(p.length===3){ daySel.value=parseInt(p[2]); monthSel.value=parseInt(p[1]); yearSel.value=parseInt(p[0]); }
-  } };
-}
 
 function buildGuestCard(n) {
   var t = T[currentLang];
   var isFirst = n === 1;
+
   var card = document.createElement('div');
   card.className = 'guest-card';
   card.id = 'guest-' + n;
-  
+
+  // Header (collassabile)
   var header = document.createElement('div');
   header.className = 'guest-header';
   header.onclick = function(e) {
     if (e.target.closest('.btn-remove') || e.target.closest('.btn-save-guest') || e.target.closest('.btn-edit')) return;
     toggleGuestCard(n);
   };
+
   var leftDiv = document.createElement('div');
   leftDiv.className = 'guest-number';
-  var span = document.createElement('span'); span.className = 'num-badge'; span.textContent = n;
+  var span = document.createElement('span');
+  span.className = 'num-badge';
+  span.textContent = n;
   leftDiv.appendChild(span);
-  var label = document.createElement('span'); label.className = 'guest-label'; label.textContent = isFirst ? t.guest_lead : t.guest_extra;
+  var label = document.createElement('span');
+  label.className = 'guest-label';
+  label.textContent = isFirst ? t.guest_lead : t.guest_extra;
   leftDiv.appendChild(label);
-  var nameSpan = document.createElement('span'); nameSpan.className = 'guest-name';
+  var nameSpan = document.createElement('span');
+  nameSpan.className = 'guest-name';
+  nameSpan.textContent = '';
   leftDiv.appendChild(nameSpan);
-  var badge = document.createElement('span'); badge.className = 'badge-saved'; badge.innerHTML = '✅ ' + t.badge_saved;
+  var badge = document.createElement('span');
+  badge.className = 'badge-saved';
+  badge.innerHTML = '✅ ' + t.badge_saved;
   leftDiv.appendChild(badge);
   header.appendChild(leftDiv);
-  
-  var actionsDiv = document.createElement('div'); actionsDiv.className = 'guest-actions';
-  var editBtn = document.createElement('button'); editBtn.className = 'btn-edit'; editBtn.textContent = t.btn_edit;
+
+  var actionsDiv = document.createElement('div');
+  actionsDiv.className = 'guest-actions';
+  // Il pulsante Salva viene spostato dopo la foto, non qui
+  var editBtn = document.createElement('button');
+  editBtn.className = 'btn-edit';
+  editBtn.textContent = t.btn_edit;
   editBtn.onclick = function(e) { e.stopPropagation(); editGuest(n); };
   actionsDiv.appendChild(editBtn);
   if (!isFirst) {
-    var removeBtn = document.createElement('button'); removeBtn.className = 'btn-remove'; removeBtn.textContent = t.btn_remove;
+    var removeBtn = document.createElement('button');
+    removeBtn.className = 'btn-remove';
+    removeBtn.textContent = t.btn_remove;
     removeBtn.onclick = function(e) { e.stopPropagation(); removeGuest(n); };
     actionsDiv.appendChild(removeBtn);
   }
   header.appendChild(actionsDiv);
   card.appendChild(header);
-  
-  var body = document.createElement('div'); body.className = 'guest-body';
-  function field(labelHtml, inputEl) { var d=document.createElement('div'); d.className='field'; var lbl=document.createElement('label'); lbl.innerHTML=labelHtml; d.appendChild(lbl); d.appendChild(inputEl); return d; }
-  
-  var g2a = document.createElement('div'); g2a.className='grid grid-2';
-  var inpSurname = document.createElement('input'); inpSurname.type='text'; inpSurname.required=true;
-  var inpName = document.createElement('input'); inpName.type='text'; inpName.required=true;
-  g2a.appendChild(field(t.f_surname, inpSurname)); g2a.appendChild(field(t.f_name, inpName));
+
+  // Body
+  var body = document.createElement('div');
+  body.className = 'guest-body';
+
+  function field(labelHtml, inputEl) {
+    var d = document.createElement('div');
+    d.className = 'field';
+    var lbl = document.createElement('label');
+    lbl.innerHTML = labelHtml;
+    d.appendChild(lbl);
+    d.appendChild(inputEl);
+    return d;
+  }
+  function inp(type, required) {
+    var i = document.createElement('input');
+    i.type = type || 'text';
+    if (required) i.required = true;
+    return i;
+  }
+
+  // Dati anagrafici - 2 colonne: Cognome, Nome
+  var g2a = document.createElement('div');
+  g2a.className = 'grid grid-2';
+  var inpSurname = inp('text', true);
+  var inpName = inp('text', true);
+  g2a.appendChild(field(t.f_surname, inpSurname));
+  g2a.appendChild(field(t.f_name, inpName));
   body.appendChild(g2a);
-  
-  var g3a = document.createElement('div'); g3a.className='grid grid-3'; g3a.style.marginTop='16px';
-  var inpNat = document.createElement('input'); inpNat.type='text'; inpNat.required=true;
-  var inpPob = document.createElement('input'); inpPob.type='text'; inpPob.required=true;
-  var dobSelector = buildDateSelectorForGuest('', null);
+
+  // Dati anagrafici - 3 colonne: Cittadinanza, Luogo nascita, Data nascita
+  var g3a = document.createElement('div');
+  g3a.className = 'grid grid-3';
+  g3a.style.marginTop = '16px';
+  var inpNat = inp('text', true);
+  var inpPob = inp('text', true);
+  var inpDob = inp('text', true);
   g3a.appendChild(field(t.f_nationality, inpNat));
   g3a.appendChild(field(t.f_pob, inpPob));
-  var dobField = field(t.f_dob, dobSelector.element);
-  g3a.appendChild(dobField);
+  g3a.appendChild(field(t.f_dob, inpDob));
+  inpDob.dataset.dpYear = '1985';
   body.appendChild(g3a);
-  
-  var gGender = document.createElement('div'); gGender.className='grid grid-2'; gGender.style.marginTop='16px';
-  var selGender = document.createElement('select'); selGender.required=true;
-  var optGender = document.createElement('option'); optGender.value=''; optGender.textContent=t.select_placeholder; selGender.appendChild(optGender);
-  [t.gender_male, t.gender_female].forEach(g=>{ var o=document.createElement('option'); o.textContent=g; selGender.appendChild(o); });
+
+  // Sesso
+  var gGender = document.createElement('div');
+  gGender.className = 'grid grid-2';
+  gGender.style.marginTop = '16px';
+  var selGender = document.createElement('select');
+  selGender.required = true;
+  var optGender = document.createElement('option');
+  optGender.value = '';
+  optGender.textContent = t.select_placeholder;
+  selGender.appendChild(optGender);
+  [t.gender_male, t.gender_female].forEach(function(g) {
+    var o = document.createElement('option');
+    o.textContent = g;
+    selGender.appendChild(o);
+  });
   gGender.appendChild(field(t.f_gender, selGender));
   body.appendChild(gGender);
-  
-  var g3b = document.createElement('div'); g3b.className='grid grid-3'; g3b.style.marginTop='16px';
-  var selDoc = document.createElement('select'); selDoc.required=true;
-  var optDoc = document.createElement('option'); optDoc.value=''; optDoc.textContent=t.select_placeholder; selDoc.appendChild(optDoc);
-  [t.doc_ci, t.doc_passport, t.doc_license, t.doc_permit].forEach(d=>{ var o=document.createElement('option'); o.textContent=d; selDoc.appendChild(o); });
-  var inpDocNum = document.createElement('input'); inpDocNum.type='text'; inpDocNum.required=true;
-  var inpDocIssuer = document.createElement('input'); inpDocIssuer.type='text'; inpDocIssuer.required=true;
+
+  // Dati documento - 3 colonne: Tipo, Numero, Luogo rilascio
+  var g3b = document.createElement('div');
+  g3b.className = 'grid grid-3';
+  g3b.style.marginTop = '16px';
+  var selDoc = document.createElement('select');
+  selDoc.required = true;
+  var optDoc = document.createElement('option');
+  optDoc.value = '';
+  optDoc.textContent = t.select_placeholder;
+  selDoc.appendChild(optDoc);
+  [t.doc_ci, t.doc_passport, t.doc_license, t.doc_permit].forEach(function(doc) {
+    var o = document.createElement('option');
+    o.textContent = doc;
+    selDoc.appendChild(o);
+  });
+  var inpDocNum = inp('text', true);
+  var inpDocIssuer = inp('text', true);
   g3b.appendChild(field(t.f_doctype, selDoc));
   g3b.appendChild(field(t.f_docnum, inpDocNum));
   g3b.appendChild(field(t.f_docissuer, inpDocIssuer));
   body.appendChild(g3b);
-  
-  var gDocExp = document.createElement('div'); gDocExp.className='grid grid-2'; gDocExp.style.marginTop='16px';
-  var expSelector = buildDateSelectorForGuest('', null);
-  gDocExp.appendChild(field(t.f_docexp, expSelector.element));
+
+  // Scadenza documento - 2 colonne (obbligatoria)
+  var gDocExp = document.createElement('div');
+  gDocExp.className = 'grid grid-2';
+  gDocExp.style.marginTop = '16px';
+  var inpDocExp = inp('text', true);
+  gDocExp.appendChild(field(t.f_docexp, inpDocExp));
+  inpDocExp.dataset.dpYear = String(new Date().getFullYear() + 3);
   body.appendChild(gDocExp);
-  
-  var hr2 = document.createElement('hr'); hr2.className='divider'; hr2.style.marginTop='20px';
+
+  // Foto documento
+  var hr2 = document.createElement('hr');
+  hr2.className = 'divider';
+  hr2.style.marginTop = '20px';
   body.appendChild(hr2);
-  
-  var photoField = document.createElement('div'); photoField.className='field';
-  var photoLabel = document.createElement('label'); photoLabel.innerHTML = t.f_doc_photo; photoField.appendChild(photoLabel);
-  var zone = document.createElement('div'); zone.className='doc-upload-zone'; zone.id='zone-'+n;
-  var preview = document.createElement('img'); preview.className='doc-upload-preview'; preview.id='preview-'+n;
-  var inner = document.createElement('div'); inner.className='doc-upload-inner';
-  var btnLbl = document.createElement('span'); btnLbl.className='doc-upload-btn-label'; btnLbl.id='photo-btn-'+n; btnLbl.textContent=t.f_doc_photo_btn;
-  var hint = document.createElement('span'); hint.className='doc-upload-hint'; hint.textContent=t.f_doc_photo_hint;
-  inner.appendChild(btnLbl); inner.appendChild(hint);
-  zone.appendChild(preview); zone.appendChild(inner);
-  var fileInput = document.createElement('input'); fileInput.type='file'; fileInput.className='doc-upload-input'; fileInput.id='file-'+n; fileInput.accept='image/*';
+
+  var photoField = document.createElement('div');
+  photoField.className = 'field';
+  var photoLabel = document.createElement('label');
+  photoLabel.innerHTML = t.f_doc_photo;
+  photoField.appendChild(photoLabel);
+
+  var zone = document.createElement('div');
+  zone.className = 'doc-upload-zone';
+  zone.id = 'zone-' + n;
+
+  var preview = document.createElement('img');
+  preview.className = 'doc-upload-preview';
+  preview.id = 'preview-' + n;
+  preview.alt = '';
+
+  var inner = document.createElement('div');
+  inner.className = 'doc-upload-inner';
+  var btnLbl = document.createElement('span');
+  btnLbl.className = 'doc-upload-btn-label';
+  btnLbl.id = 'photo-btn-' + n;
+  btnLbl.textContent = t.f_doc_photo_btn;
+  var hint = document.createElement('span');
+  hint.className = 'doc-upload-hint';
+  hint.textContent = t.f_doc_photo_hint;
+  inner.appendChild(btnLbl);
+  inner.appendChild(hint);
+  zone.appendChild(preview);
+  zone.appendChild(inner);
+
+  var fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.className = 'doc-upload-input';
+  fileInput.id = 'file-' + n;
+  fileInput.accept = 'image/*';
   fileInput.onchange = function() { handlePhoto(n, fileInput); };
+
   zone.onclick = function() { fileInput.click(); };
-  photoField.appendChild(zone); photoField.appendChild(fileInput);
+
+  photoField.appendChild(zone);
+  photoField.appendChild(fileInput);
   body.appendChild(photoField);
+
   card.appendChild(body);
-  
-  var saveBtnContainer = document.createElement('div'); saveBtnContainer.style.marginTop='16px'; saveBtnContainer.style.textAlign='right';
-  var saveBtn = document.createElement('button'); saveBtn.className='btn-save-guest'; saveBtn.textContent=t.btn_save;
-  saveBtn.onclick = function(e) { e.stopPropagation(); saveGuest(n, {surname: inpSurname, firstName: inpName, nationality: inpNat, pob: inpPob, dobSelector, gender: selGender, docType: selDoc, docNumber: inpDocNum, docIssuer: inpDocIssuer, expSelector, fileInput}); };
+
+  // ✅ Aggiungi il pulsante Salva QUI, dopo la foto
+  var saveBtnContainer = document.createElement('div');
+  saveBtnContainer.style.marginTop = '16px';
+  saveBtnContainer.style.textAlign = 'right';
+  var saveBtn = document.createElement('button');
+  saveBtn.className = 'btn-save-guest';
+  saveBtn.textContent = t.btn_save;
+  saveBtn.onclick = function(e) { 
+    e.stopPropagation(); 
+    saveGuest(n); 
+  };
   saveBtnContainer.appendChild(saveBtn);
   card.appendChild(saveBtnContainer);
-  
-  // store references
-  card._fields = { inpSurname, inpName, inpNat, inpPob, dobSelector, selGender, selDoc, inpDocNum, inpDocIssuer, expSelector, fileInput };
+
   return card;
+}
+
+function addGuest() {
+  guestCount++;
+  var card = buildGuestCard(guestCount);
+  document.getElementById('guests-container').appendChild(card);
+  // Init date pickers AFTER card is in DOM
+  card.querySelectorAll('input[data-dp-year]').forEach(function(inp) {
+    DP.attach(inp, { year: parseInt(inp.dataset.dpYear) });
+  });
+}
+
+function removeGuest(n) {
+  var el = document.getElementById('guest-' + n);
+  if (el) {
+    el.style.opacity='0';
+    el.style.transition='opacity .2s';
+    setTimeout(function(){ el.remove(); }, 200);
+  }
+}
+
+function toggleGuestCard(n) {
+  var card = document.getElementById('guest-' + n);
+  if (!card) return;
+  card.classList.toggle('collapsed');
 }
 
 function handlePhoto(n, input) {
@@ -774,194 +801,293 @@ function handlePhoto(n, input) {
   if (!file) return;
   var reader = new FileReader();
   reader.onload = function(e) {
-    var zone = document.getElementById('zone-'+n);
-    var preview = document.getElementById('preview-'+n);
-    var btn = document.getElementById('photo-btn-'+n);
+    var zone    = document.getElementById('zone-' + n);
+    var preview = document.getElementById('preview-' + n);
+    var btn     = document.getElementById('photo-btn-' + n);
     preview.src = e.target.result;
     zone.classList.add('has-file');
-    if(btn) btn.textContent = T[currentLang].f_doc_photo_change;
+    btn.textContent = T[currentLang].f_doc_photo_change;
   };
   reader.readAsDataURL(file);
 }
 
-function addGuest() {
-  guestCount++;
-  var card = buildGuestCard(guestCount);
-  document.getElementById('guests-container').appendChild(card);
+// ── GESTIONE MODIFICA DATI ────────────────────────────────────
+function setFieldsDisabled(card, disabled) {
+  var inputs = card.querySelectorAll('input');
+  var selects = card.querySelectorAll('select');
+  inputs.forEach(function(inp) {
+    if (inp.type !== 'file') inp.disabled = disabled;
+  });
+  selects.forEach(function(sel) {
+    sel.disabled = disabled;
+  });
+  // Non disabilitare l'upload foto
+  var fileInput = card.querySelector('.doc-upload-input');
+  if (fileInput) fileInput.disabled = false;
 }
 
-function removeGuest(n) {
-  var el = document.getElementById('guest-'+n);
-  if (el) { el.style.opacity='0'; setTimeout(()=>el.remove(),200); }
-}
-function toggleGuestCard(n) {
-  var card = document.getElementById('guest-'+n);
-  if(card) card.classList.toggle('collapsed');
-}
-function setFieldsDisabled(card, disabled) {
-  var f = card._fields;
-  if(!f) return;
-  f.inpSurname.disabled = disabled; f.inpName.disabled = disabled; f.inpNat.disabled = disabled;
-  f.inpPob.disabled = disabled; f.selGender.disabled = disabled; f.selDoc.disabled = disabled;
-  f.inpDocNum.disabled = disabled; f.inpDocIssuer.disabled = disabled;
-  f.dobSelector.element.querySelectorAll('select').forEach(s=>s.disabled=disabled);
-  f.expSelector.element.querySelectorAll('select').forEach(s=>s.disabled=disabled);
-}
-function collectGuestDataFromCard(card) {
-  var f = card._fields;
-  if(!f) return {};
-  return {
-    surname: f.inpSurname.value, firstName: f.inpName.value, nationality: f.inpNat.value,
-    pob: f.inpPob.value, dob: f.dobSelector.getValue(), gender: f.selGender.value,
-    docType: f.selDoc.value, docNumber: f.inpDocNum.value, docIssuer: f.inpDocIssuer.value,
-    docExpiry: f.expSelector.getValue()
-  };
-}
-async function saveGuest(n, fields) {
-  var t = T[currentLang];
+// ── SALVA SINGOLO OSPITE ──────────────────────────────────────
+function collectGuestData(n) {
+  var card = document.getElementById('guest-' + n);
+  if (!card) return null;
+  var inputs  = card.querySelectorAll('input');
+  var selects = card.querySelectorAll('select');
   var data = {
-    surname: fields.inpSurname.value, firstName: fields.inpName.value, nationality: fields.inpNat.value,
-    pob: fields.inpPob.value, dob: fields.dobSelector.getValue(), gender: fields.gender.value,
-    docType: fields.docType.value, docNumber: fields.docNumber.value, docIssuer: fields.docIssuer.value,
-    docExpiry: fields.expSelector.getValue()
+    surname:     inputs[0] ? inputs[0].value : '',
+    firstName:   inputs[1] ? inputs[1].value : '',
+    nationality: inputs[2] ? inputs[2].value : '',
+    pob:         inputs[3] ? inputs[3].value : '',
+    dob:         inputs[4] ? (inputs[4].dataset.iso || inputs[4].value) : '',
+    gender:      selects[0] ? selects[0].value : '',
+    docType:     selects[1] ? selects[1].value : '',
+    docNumber:   inputs[5] ? inputs[5].value : '',
+    docIssuer:   inputs[6] ? inputs[6].value : '',
+    docExpiry:   inputs[7] ? (inputs[7].dataset.iso || inputs[7].value) : ''
   };
+  return data;
+}
+
+async function saveGuest(n) {
+  var t = T[currentLang];
+  var data = collectGuestData(n);
+  if (!data) return;
+
+  // Controlla campi obbligatori
   if (!data.surname || !data.firstName || !data.nationality || !data.pob || !data.dob || !data.gender || 
       !data.docType || !data.docNumber || !data.docIssuer || !data.docExpiry) {
     showToast('⚠️ Compila tutti i campi obbligatori');
     return;
   }
-  var fi = fields.fileInput;
+
+  // Foto
+  var fi = document.getElementById('file-' + n);
   var photoData = null;
   if (fi && fi.files && fi.files.length > 0) {
     var reader = new FileReader();
-    photoData = await new Promise(resolve => { reader.onload = e => resolve(e.target.result); reader.readAsDataURL(fi.files[0]); });
+    photoData = await new Promise(function(resolve) {
+      reader.onload = function(e) { resolve(e.target.result); };
+      reader.readAsDataURL(fi.files[0]);
+    });
   }
+
+  // Salva su Firebase
   try {
+    // Carica dati esistenti
     var resp = await fetch(FIREBASE_URL + '/sessions/' + SESSION_ID + '.json');
     var existing = await resp.json();
-    if(!existing) existing = { booking: {}, guests: [], photos: {} };
-    if(!existing.guests) existing.guests = [];
-    if(!existing.photos) existing.photos = {};
+    if (!existing) existing = { booking: {}, guests: [], photos: {} };
+    if (!existing.guests) existing.guests = [];
+    if (!existing.photos) existing.photos = {};
+
+    // Aggiorna ospite
     existing.guests[n-1] = data;
-    if(photoData) existing.photos['photo_'+n] = photoData;
-    await fetch(FIREBASE_URL + '/sessions/' + SESSION_ID + '.json', { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(existing) });
-    var card = document.getElementById('guest-'+n);
-    card.classList.add('collapsed','saved');
+    if (photoData) existing.photos['photo_' + n] = photoData;
+
+    // Salva
+    await fetch(FIREBASE_URL + '/sessions/' + SESSION_ID + '.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(existing)
+    });
+
+    // Aggiorna UI
+    var card = document.getElementById('guest-' + n);
+    card.classList.add('collapsed');
+    card.classList.add('saved');
     var nameSpan = card.querySelector('.guest-name');
     nameSpan.textContent = data.firstName + ' ' + data.surname;
     var saveBtn = card.querySelector('.btn-save-guest');
     var editBtn = card.querySelector('.btn-edit');
-    if(saveBtn) saveBtn.style.display = 'none';
-    if(editBtn) editBtn.style.display = 'inline-block';
+    saveBtn.style.display = 'none';
+    editBtn.style.display = 'inline-block';
+    
+    // Disabilita tutti i campi
     setFieldsDisabled(card, true);
+    
     showToast('✓ ' + data.firstName + ' ' + data.surname + ' salvato!');
-  } catch(e) { showToast('❌ Errore nel salvataggio'); }
+  } catch(e) {
+    showToast('❌ Errore nel salvataggio');
+  }
 }
+
 function editGuest(n) {
-  var card = document.getElementById('guest-'+n);
+  var card = document.getElementById('guest-' + n);
   card.classList.remove('collapsed');
   var saveBtn = card.querySelector('.btn-save-guest');
   var editBtn = card.querySelector('.btn-edit');
-  if(saveBtn) saveBtn.style.display = 'inline-block';
-  if(editBtn) editBtn.style.display = 'none';
+  saveBtn.style.display = 'inline-block';
+  editBtn.style.display = 'none';
+  
+  // Abilita tutti i campi
   setFieldsDisabled(card, false);
 }
 
-// ==================== SUBMIT ====================
-function confirmSubmit() { document.getElementById('confirm-overlay').classList.add('show'); }
-function closeConfirm() { document.getElementById('confirm-overlay').classList.remove('show'); }
+// ── CONFERMA INVIO ────────────────────────────────────────────
+function confirmSubmit() {
+  document.getElementById('confirm-overlay').classList.add('show');
+}
 
+function closeConfirm() {
+  document.getElementById('confirm-overlay').classList.remove('show');
+}
+
+// ── SUBMIT ────────────────────────────────────────────────────
 async function submitForm() {
   var t = T[currentLang];
   var privacyOk = document.getElementById('privacy-ok').checked;
   var rulesOk   = document.getElementById('rules-ok').checked;
-  var checkin   = getCheckinDate();
-  var checkout  = getCheckoutDate();
+  var _ciP=DP.get('checkin-date'); var checkin=_ciP?_ciP.getISO():(document.getElementById('checkin-date').dataset.iso||'');
+  var _coP=DP.get('checkout-date'); var checkout=_coP?_coP.getISO():(document.getElementById('checkout-date').dataset.iso||'');
   var arrival   = document.getElementById('arrival-time').value;
   var totGuests = document.getElementById('total-guests').value;
+
   if (!checkin || !checkout || !arrival || !totGuests) { alert(t.alert_fields); return; }
   if (!privacyOk || !rulesOk) { alert(t.alert_privacy); return; }
   if (guestCount === 0) { alert(t.alert_guest_min); return; }
   
+  // ✅ Controlla foto SOLO per gli ospiti che hanno dati
   var cards = document.querySelectorAll('.guest-card');
-  for (var i=0;i<cards.length;i++) {
-    var fi = document.getElementById('file-'+(i+1));
-    var zone = document.getElementById('zone-'+(i+1));
-    var hasNew = fi && fi.files && fi.files.length>0;
-    var hasExisting = zone && zone.classList.contains('has-file');
-    if(!hasNew && !hasExisting) { alert(t.alert_photo + ' (Ospite '+(i+1)+')'); return; }
+  var hasMissingPhoto = false;
+  var missingGuestIndex = -1;
+
+  for (var i = 0; i < cards.length; i++) {
+    var card = cards[i];
+    var inputs = card.querySelectorAll('input');
+    var selects = card.querySelectorAll('select');
+    
+    // Verifica se l'ospite ha almeno un campo compilato
+    var hasData = false;
+    inputs.forEach(function(inp) {
+      if (inp.type !== 'file' && inp.value && inp.value.trim() !== '') {
+        hasData = true;
+      }
+    });
+    selects.forEach(function(sel) {
+      if (sel.value && sel.value !== '') {
+        hasData = true;
+      }
+    });
+    
+    // Se l'ospite ha dati, verifica se ha una foto
+    if (hasData) {
+      var fi = document.getElementById('file-' + (i+1));
+      var zone = document.getElementById('zone-' + (i+1));
+      
+      // Controlla se c'è una foto già caricata (input file OPPURE anteprima visibile)
+      var hasNewFile = fi && fi.files && fi.files.length > 0;
+      var hasExistingPhoto = zone && zone.classList.contains('has-file');
+      
+      if (!hasNewFile && !hasExistingPhoto) {
+        hasMissingPhoto = true;
+        missingGuestIndex = i + 1;
+        break;
+      }
+    }
   }
-  
+
+  if (hasMissingPhoto) {
+    alert(t.alert_photo + ' (Ospite ' + missingGuestIndex + ')');
+    return;
+  }
+
   var btn = document.querySelector('.btn-submit');
   btn.textContent = t.alert_sending;
   btn.disabled = true;
   closeConfirm();
-  
+
   var compressImage = function(file) {
-    return new Promise(res => {
+    return new Promise(function(res) {
       var img = new Image();
       var url = URL.createObjectURL(file);
       img.onload = function() {
-        var scale = Math.min(1, 1200/img.width);
+        var scale = Math.min(1, 1200 / img.width);
         var c = document.createElement('canvas');
-        c.width = img.width*scale; c.height = img.height*scale;
-        c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+        c.width = img.width * scale; c.height = img.height * scale;
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
         URL.revokeObjectURL(url);
-        res(c.toDataURL('image/jpeg',0.75));
+        res(c.toDataURL('image/jpeg', 0.75));
       };
       img.src = url;
     });
   };
-  
+
   try {
+    // ✅ 1. Genera il folderName e invia i dati testuali
+    var cards = document.querySelectorAll('.guest-card');
     var g1Inputs = cards[0].querySelectorAll('input');
     var firstName = g1Inputs[0] ? g1Inputs[0].value : 'Ospite';
     var lastName = g1Inputs[1] ? g1Inputs[1].value : '';
     var folderName = checkin + '_' + firstName + '_' + lastName;
-    
+
+    // ✅ 2. Invia dati testuali
     var params = new URLSearchParams();
     params.append('action','saveData');
     params.append('Check_in', checkin);
-    params.append('Check_out', checkout);
-    params.append('Arrival_time', arrival);
-    params.append('Total_guests', totGuests);
+    params.append('Check_out', document.getElementById('checkout-date').value);
+    params.append('Arrival_time', document.getElementById('arrival-time').value);
+    params.append('Total_guests', document.getElementById('total-guests').value);
     params.append('Privacy_GDPR','Accepted');
     params.append('House_rules','Accepted');
     params.append('Num_guests', cards.length);
-    for(let i=0;i<cards.length;i++) {
-      var card = cards[i];
-      var f = card._fields;
-      if(f) {
-        params.append(`G${i+1}_Surname`, f.inpSurname.value);
-        params.append(`G${i+1}_FirstName`, f.inpName.value);
-        params.append(`G${i+1}_Nationality`, f.inpNat.value);
-        params.append(`G${i+1}_POB`, f.inpPob.value);
-        params.append(`G${i+1}_DOB`, f.dobSelector.getValue());
-        params.append(`G${i+1}_Gender`, f.selGender.value);
-        params.append(`G${i+1}_DocType`, f.selDoc.value);
-        params.append(`G${i+1}_DocNumber`, f.inpDocNum.value);
-        params.append(`G${i+1}_DocIssuer`, f.inpDocIssuer.value);
-        params.append(`G${i+1}_DocExpiry`, f.expSelector.getValue());
-      }
-    }
-    await fetch(APPS_SCRIPT_URL + '?' + params.toString(), { method:'GET', mode:'no-cors' });
-    
+
+    cards.forEach(function(card, i) {
+      var n = i + 1;
+      var inp = card.querySelectorAll('input');
+      var sel = card.querySelectorAll('select');
+      params.append('G'+n+'_Surname',     inp[0] ? inp[0].value : '');
+      params.append('G'+n+'_FirstName',   inp[1] ? inp[1].value : '');
+      params.append('G'+n+'_Nationality', inp[2] ? inp[2].value : '');
+      params.append('G'+n+'_POB',         inp[3] ? inp[3].value : '');
+      params.append('G'+n+'_DOB',         inp[4] ? inp[4].value : '');
+      params.append('G'+n+'_Gender',      sel[0] ? sel[0].value : '');
+      params.append('G'+n+'_DocType',     sel[1] ? sel[1].value : '');
+      params.append('G'+n+'_DocNumber',   inp[5] ? inp[5].value : '');
+      params.append('G'+n+'_DocIssuer',   inp[6] ? inp[6].value : '');
+      params.append('G'+n+'_DocExpiry',   inp[7] ? inp[7].value : '');
+    });
+
+    // STEP 1: invia dati testuali e ottieni folderId dalla risposta
+    var saveResp = await fetch(APPS_SCRIPT_URL + '?' + params.toString(), { method:'GET', redirect:'follow' });
+    var saveJson = await saveResp.json();
+    if (saveJson.result !== 'ok') throw new Error('saveData failed: ' + (saveJson.message||''));
+    var folderId = saveJson.folderId;
+
+    // STEP 2: comprimi e invia tutte le foto in parallelo con folderId
     var photoPromises = [];
-    for(let j=0;j<cards.length;j++) {
-      var n2=j+1;
-      var fi2=document.getElementById('file-'+n2);
-      if(fi2 && fi2.files[0]) {
-        var f2 = cards[j]._fields;
-        var fn = f2 ? f2.inpSurname.value : 'Ospite'+n2;
-        var ln = f2 ? f2.inpName.value : '';
-        var prom = compressImage(fi2.files[0]).then(b64 => fetch(APPS_SCRIPT_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body: JSON.stringify({ action:'savePhoto', folderKey: folderName, photoName:`Doc_Ospite${n2}_${fn}_${ln}.jpg`, photoData:b64 }) }));
-        photoPromises.push(prom);
+    for (var j = 0; j < cards.length; j++) {
+      var n2 = j + 1;
+      var fi2 = document.getElementById('file-' + n2);
+      if (fi2 && fi2.files[0]) {
+        var inp2 = cards[j].querySelectorAll('input');
+        var fn = inp2[1] ? inp2[1].value : 'Ospite' + n2;
+        var ln = inp2[0] ? inp2[0].value : '';
+        (function(gn, firstname, lastname, file) {
+          var promise = compressImage(file).then(function(b64) {
+            return fetch(APPS_SCRIPT_URL, {
+              method:'POST', redirect:'follow',
+              headers:{'Content-Type':'text/plain'},
+              body: JSON.stringify({
+                action:'savePhoto',
+                folderId: folderId,
+                photoName:'Doc_Ospite'+gn+'_'+firstname+'_'+lastname+'.jpg',
+                photoData:b64
+              })
+            });
+          });
+          photoPromises.push(promise);
+        }(n2, fn, ln, fi2.files[0]));
       }
     }
     await Promise.all(photoPromises);
-    fetch(FIREBASE_URL + '/sessions/' + SESSION_ID + '.json', { method:'DELETE' }).catch(()=>{});
+
+    // ✅ 5. Elimina sessione Firebase
+    fetch(FIREBASE_URL + '/sessions/' + SESSION_ID + '.json', { method:'DELETE' }).catch(function(){});
+
     document.getElementById('success-overlay').classList.add('show');
-    document.getElementById('success-overlay').addEventListener('click', function() { this.classList.remove('show'); });
+    document.getElementById('success-overlay').addEventListener('click', function() {
+      document.getElementById('success-overlay').classList.remove('show');
+    });
+
   } catch(err) {
     alert(t.alert_neterror);
     btn.textContent = T[currentLang].btn_submit;
@@ -969,65 +1095,272 @@ async function submitForm() {
   }
 }
 
-// ==================== INIT ====================
+
+// ─────────────────────────────────────────────
+//  DATE PICKER ENGINE
+// ─────────────────────────────────────────────
+var DP = (function() {
+  var store = {};
+  var MO_IT = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+  var MO_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var DW_IT = ['Lu','Ma','Me','Gi','Ve','Sa','Do'];
+  var DW_EN = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+  function mo() { return currentLang === 'en' ? MO_EN : MO_IT; }
+  function dw() { return currentLang === 'en' ? DW_EN : DW_IT; }
+  function pad(n) { return n < 10 ? '0'+n : ''+n; }
+  function isoToDisplay(iso) {
+    if (!iso) return '';
+    var p = iso.split('-');
+    return p[2]+'/'+p[1]+'/'+p[0];
+  }
+  function displayToIso(disp) {
+    if (!disp || disp.indexOf('/') < 0) return '';
+    var p = disp.split('/');
+    return p[2]+'-'+p[1]+'-'+p[0];
+  }
+  function dim(m,y) { return new Date(y,m,0).getDate(); }
+  function fd(m,y) { var d=new Date(y,m-1,1).getDay(); return d===0?6:d-1; }
+  function el(tag,cls) { var e=document.createElement(tag); if(cls) e.className=cls; return e; }
+
+  function make(inputId, opts) {
+    opts = opts || {};
+    var inp  = document.getElementById(inputId);
+    var pop  = document.getElementById('dp-'+inputId);
+    if (!inp || !pop) return;
+    var now  = new Date();
+    var sel  = null;
+    var view = 'days';
+    var cm   = now.getMonth()+1;
+    var cy   = opts.year || now.getFullYear();
+
+    document.addEventListener('click', function(e) {
+      if (!inp.closest('.dp-wrap').contains(e.target)) close();
+    }, true);
+    inp.addEventListener('click', function(e) { e.stopPropagation(); toggle(); });
+    inp.addEventListener('keydown', function(e) { if(e.key==='Escape') close(); });
+
+    function toggle() {
+      Object.keys(store).forEach(function(id){ if(id!==inputId && store[id]) store[id].close(); });
+      pop.classList.contains('open') ? close() : open();
+    }
+    function open()  { render(); pop.classList.add('open'); }
+    function close() { pop.classList.remove('open'); }
+
+    function pick(d,m,y) {
+      sel={d:d,m:m,y:y};
+      var iso = y+'-'+pad(m)+'-'+pad(d);
+      inp.value = isoToDisplay(iso);
+      inp.dataset.iso = iso;
+      close();
+      inp.dispatchEvent(new Event('change'));
+      if (opts.onChange) opts.onChange(iso);
+    }
+
+    function render() {
+      pop.innerHTML='';
+      if(view==='years') rYears();
+      else if(view==='months') rMonths();
+      else rDays();
+    }
+
+    function header(title, onTitle, onPrev, onNext) {
+      var h=el('div','dp-header');
+      var p=el('button','dp-nav'); p.type='button'; p.textContent='‹'; p.onclick=function(e){e.stopPropagation();onPrev();};
+      var l=el('span','dp-lbl'); l.textContent=title; l.onclick=function(e){e.stopPropagation();onTitle();};
+      var n=el('button','dp-nav'); n.type='button'; n.textContent='›'; n.onclick=function(e){e.stopPropagation();onNext();};
+      h.appendChild(p); h.appendChild(l); h.appendChild(n);
+      pop.appendChild(h);
+    }
+
+    function rDays() {
+      header(mo()[cm-1]+' '+cy,
+        function(){view='years';render();},
+        function(){cm--;if(cm<1){cm=12;cy--;}render();},
+        function(){cm++;if(cm>12){cm=1;cy++;}render();}
+      );
+      var g=el('div','dp-grid dp-7');
+      dw().forEach(function(d){var c=el('div','dp-dow');c.textContent=d;g.appendChild(c);});
+      var first=fd(cm,cy), tot=dim(cm,cy), prev=dim(cm===1?12:cm-1,cm===1?cy-1:cy);
+      var today=new Date();
+      for(var i=0;i<first;i++){var c=el('button','dp-cell dim');c.type='button';c.textContent=prev-first+i+1;g.appendChild(c);}
+      for(var d=1;d<=tot;d++){
+        var c=el('button','dp-cell');c.type='button';c.textContent=d;
+        if(sel&&sel.d===d&&sel.m===cm&&sel.y===cy) c.classList.add('sel');
+        if(d===today.getDate()&&cm===today.getMonth()+1&&cy===today.getFullYear()) c.classList.add('today');
+        if(opts.minDate){var iso=cy+'-'+pad(cm)+'-'+pad(d);if(iso<opts.minDate)c.classList.add('dim');}
+        (function(dd){c.onclick=function(e){e.stopPropagation();pick(dd,cm,cy);};}(d));
+        g.appendChild(c);
+      }
+      var rem=(Math.ceil((first+tot)/7)*7)-(first+tot);
+      for(var i=1;i<=rem;i++){var c=el('button','dp-cell dim');c.type='button';c.textContent=i;g.appendChild(c);}
+      pop.appendChild(g);
+    }
+
+    function rMonths() {
+      header(''+cy,
+        function(){view='years';render();},
+        function(){cy--;render();},
+        function(){cy++;render();}
+      );
+      var g=el('div','dp-grid dp-4');
+      mo().forEach(function(m,idx){
+        var c=el('button','dp-cell');c.type='button';c.textContent=m.slice(0,3);
+        if(sel&&sel.m===idx+1&&sel.y===cy) c.classList.add('sel');
+        (function(mi){c.onclick=function(e){e.stopPropagation();cm=mi+1;view='days';render();};}(idx));
+        g.appendChild(c);
+      });
+      pop.appendChild(g);
+    }
+
+    function rYears() {
+      var sy=Math.floor(cy/20)*20;
+      header(sy+'–'+(sy+19),
+        function(){cy-=20;render();},
+        function(){cy-=20;render();},
+        function(){cy+=20;render();}
+      );
+      var g=el('div','dp-grid dp-5');
+      for(var y=sy;y<sy+20;y++){
+        var c=el('button','dp-cell');c.type='button';c.textContent=y;
+        if(sel&&sel.y===y) c.classList.add('sel');
+        if(y===new Date().getFullYear()) c.classList.add('today');
+        (function(yr){c.onclick=function(e){e.stopPropagation();cy=yr;view='months';render();};}(y));
+        g.appendChild(c);
+      }
+      pop.appendChild(g);
+    }
+
+    var api = {
+      close: close,
+      getISO: function() { return inp.dataset.iso || ''; },
+      setISO: function(iso) {
+        if (!iso) return;
+        var p = iso.split('-');
+        if (p.length === 3) { cm=parseInt(p[1]); cy=parseInt(p[0]); pick(parseInt(p[2]),parseInt(p[1]),parseInt(p[0])); }
+      }
+    };
+    store[inputId] = api;
+    return api;
+  }
+
+  function attach(inputEl, opts) {
+    var uid = 'dpx_' + Math.random().toString(36).slice(2,9);
+    inputEl.id = uid;
+    inputEl.readOnly = true;
+    inputEl.classList.add('dp-input');
+    inputEl.placeholder = 'gg/mm/aaaa';
+    var wrap = document.createElement('div');
+    wrap.className = 'dp-wrap';
+    inputEl.parentNode.insertBefore(wrap, inputEl);
+    wrap.appendChild(inputEl);
+    var pop = document.createElement('div');
+    pop.className = 'dp-popup';
+    pop.id = 'dp-'+uid;
+    wrap.appendChild(pop);
+    return make(uid, opts);
+  }
+
+  return { make:make, attach:attach, get:function(id){return store[id];} };
+}());
+
+// Init date pickers per checkin/checkout (dopo DOM ready)
+function initBookingDatePickers() {
+  var todayISO = new Date().toISOString().split('T')[0];
+  // Sostituisce i due input date statici con custom pickers
+  var ciEl = document.getElementById('checkin-date');
+  var coEl = document.getElementById('checkout-date');
+  if (!ciEl || !coEl) return;
+
+  // Wrap checkin
+  ciEl.type = 'text'; ciEl.readOnly = true; ciEl.classList.add('dp-input'); ciEl.placeholder = 'gg/mm/aaaa';
+  var ciWrap = document.createElement('div'); ciWrap.className = 'dp-wrap';
+  ciEl.parentNode.insertBefore(ciWrap, ciEl); ciWrap.appendChild(ciEl);
+  var ciPop = document.createElement('div'); ciPop.className = 'dp-popup'; ciPop.id = 'dp-checkin-date'; ciWrap.appendChild(ciPop);
+  DP.make('checkin-date', { minDate: todayISO, onChange: function() { saveAllToFirebase(); validateDates(); } });
+
+  // Wrap checkout
+  coEl.type = 'text'; coEl.readOnly = true; coEl.classList.add('dp-input'); coEl.placeholder = 'gg/mm/aaaa';
+  var coWrap = document.createElement('div'); coWrap.className = 'dp-wrap';
+  coEl.parentNode.insertBefore(coWrap, coEl); coWrap.appendChild(coEl);
+  var coPop = document.createElement('div'); coPop.className = 'dp-popup'; coPop.id = 'dp-checkout-date'; coWrap.appendChild(coPop);
+  DP.make('checkout-date', { minDate: todayISO, onChange: function() { saveAllToFirebase(); } });
+}
+
+// ── INIT ──────────────────────────────────────────────────────
 document.getElementById('session-link-text').textContent = window.location.href;
+initBookingDatePickers();
+
+// Imposta la lingua iniziale
 setLang('it');
-buildDateSelects('checkin-selects', function(){ saveAllToFirebase(); validateDates(); });
-buildDateSelects('checkout-selects', function(){ saveAllToFirebase(); validateDates(); });
-function validateDates() { /* already handled inside selects */ }
+
+// Imposta la data minima per oggi
+var today = new Date().toISOString().split('T')[0];
+document.getElementById('checkin-date').setAttribute('min', today);
+document.getElementById('checkout-date').setAttribute('min', today);
+
+// Aggiungi un ospite di default
 addGuest();
 
+// Carica TUTTI i dati da Firebase (booking + guests)
 fetch(FIREBASE_URL + '/sessions/' + SESSION_ID + '.json')
-  .then(r=>r.json())
-  .then(data => {
-    if(data && data.booking) {
-      if(data.booking.checkin) document.getElementById('checkin-selects')?.setValue?.(data.booking.checkin);
-      if(data.booking.checkout) document.getElementById('checkout-selects')?.setValue?.(data.booking.checkout);
-      if(data.booking.arrival) document.getElementById('arrival-time').value = data.booking.arrival;
-      if(data.booking.totGuests) document.getElementById('total-guests').value = data.booking.totGuests;
-    }
-    if(data && data.guests && data.guests.length > 0) {
-      document.getElementById('guests-container').innerHTML = '';
-      guestCount = 0;
-      data.guests.forEach((g, idx) => {
-        addGuest();
-        var card = document.getElementById('guest-'+(idx+1));
-        var f = card._fields;
-        if(f) {
-          f.inpSurname.value = g.surname || '';
-          f.inpName.value = g.firstName || '';
-          f.inpNat.value = g.nationality || '';
-          f.inpPob.value = g.pob || '';
-          if(g.dob) f.dobSelector.setValue(g.dob);
-          f.selGender.value = g.gender || '';
-          f.selDoc.value = g.docType || '';
-          f.inpDocNum.value = g.docNumber || '';
-          f.inpDocIssuer.value = g.docIssuer || '';
-          if(g.docExpiry) f.expSelector.setValue(g.docExpiry);
-          var photoData = data.photos && data.photos['photo_'+(idx+1)];
-          if(photoData) {
-            var zone = document.getElementById('zone-'+(idx+1));
-            var preview = document.getElementById('preview-'+(idx+1));
-            var btn = document.getElementById('photo-btn-'+(idx+1));
-            if(preview) preview.src = photoData;
-            if(zone) zone.classList.add('has-file');
-            if(btn) btn.textContent = T[currentLang].f_doc_photo_change;
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data) {
+      // Carica booking
+      if (data.booking) {
+        if (data.booking.checkin) { var p=DP.get('checkin-date'); if(p) p.setISO(data.booking.checkin); }
+        if (data.booking.checkout) { var p=DP.get('checkout-date'); if(p) p.setISO(data.booking.checkout); }
+        if (data.booking.arrival) document.getElementById('arrival-time').value = data.booking.arrival;
+        if (data.booking.totGuests) document.getElementById('total-guests').value = data.booking.totGuests;
+      }
+      
+      // Carica guests
+      if (data.guests && data.guests.length > 0) {
+        document.getElementById('guests-container').innerHTML = '';
+        guestCount = 0;
+        data.guests.forEach(function(g, i) {
+          addGuest();
+          var card = document.getElementById('guest-' + (i+1));
+          var inputs  = card.querySelectorAll('input');
+          var selects = card.querySelectorAll('select');
+          if (inputs[0])  inputs[0].value  = g.surname     || '';
+          if (inputs[1])  inputs[1].value  = g.firstName   || '';
+          if (inputs[2])  inputs[2].value  = g.nationality || '';
+          if (inputs[3])  inputs[3].value  = g.pob         || '';
+          if (inputs[4] && g.dob)    { inputs[4].dataset.iso=g.dob; inputs[4].value=g.dob.split('-').reverse().join('/'); }
+          if (selects[0]) selects[0].value = g.gender      || '';
+          if (selects[1]) selects[1].value = g.docType     || '';
+          if (inputs[5])  inputs[5].value  = g.docNumber   || '';
+          if (inputs[6])  inputs[6].value  = g.docIssuer   || '';
+          if (inputs[7] && g.docExpiry) { inputs[7].dataset.iso=g.docExpiry; inputs[7].value=g.docExpiry.split('-').reverse().join('/'); }
+          var photoData = data.photos && data.photos['photo_' + (i+1)];
+          if (photoData) {
+            var zone = document.getElementById('zone-' + (i+1));
+            var preview = document.getElementById('preview-' + (i+1));
+            var btn = document.getElementById('photo-btn-' + (i+1));
+            preview.src = photoData;
+            zone.classList.add('has-file');
+            btn.textContent = T[currentLang].f_doc_photo_change;
           }
-          if(g.firstName || g.surname || g.docNumber) {
-            card.classList.add('collapsed','saved');
+          // Se l'ospite è salvato, collassa, mostra nome e badge, e disabilita campi
+          if (g.firstName || g.surname || g.docNumber) {
+            var card = document.getElementById('guest-' + (i+1));
+            card.classList.add('collapsed');
+            card.classList.add('saved');
             var nameSpan = card.querySelector('.guest-name');
-            if(nameSpan) nameSpan.textContent = g.firstName + ' ' + g.surname;
+            nameSpan.textContent = g.firstName + ' ' + g.surname;
             var saveBtn = card.querySelector('.btn-save-guest');
             var editBtn = card.querySelector('.btn-edit');
-            if(saveBtn) saveBtn.style.display = 'none';
-            if(editBtn) editBtn.style.display = 'inline-block';
+            saveBtn.style.display = 'none';
+            editBtn.style.display = 'inline-block';
             setFieldsDisabled(card, true);
           }
-        }
-      });
-      showToast('✓ Dati caricati dalla sessione');
+        });
+        showToast('✓ Dati caricati dalla sessione');
+      }
     }
-  }).catch(()=>{});
+  })
+  .catch(function() {});
 </script>
 </body>
 </html>
